@@ -1,0 +1,189 @@
+@import "tailwindcss";
+
+/* Alte Bistro tokens. Charcoal, burnt orange, bone white. Flat grounds only. */
+@theme {
+  --color-char: #131209;
+  --color-coal: #181818;
+  --color-smoke: #1f1f1f;
+  --color-ash: #272727;
+  --color-line: #313131;
+
+  --color-bone: #efe8dc;
+  --color-bone-2: #bdb5a7;
+  --color-bone-3: #8f8879;
+
+  --color-ember: #d2622a;
+  --color-ember-hi: #e2733a;
+  --color-ember-lo: #a9461b;
+
+  --font-display: var(--font-bodoni), "Bodoni 72", "Didot", serif;
+  --font-sans: var(--font-geist), ui-sans-serif, system-ui, sans-serif;
+
+  --ease-out-expo: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* Named text styles (landing-page-design B1). Display styles use the serif. */
+@utility display-1 {
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: var(--text-4xl);
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+  @media (width >= 26rem) {
+    font-size: var(--text-5xl);
+    line-height: 1;
+  }
+  @media (width >= 48rem) {
+    font-size: var(--text-7xl);
+  }
+  @media (width >= 80rem) {
+    font-size: var(--text-8xl);
+  }
+}
+@utility heading-1 {
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: var(--text-4xl);
+  line-height: var(--text-4xl--line-height);
+  letter-spacing: -0.015em;
+  @media (width >= 48rem) {
+    font-size: var(--text-6xl);
+    line-height: 1;
+  }
+}
+@utility heading-2 {
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: var(--text-4xl);
+  line-height: var(--text-4xl--line-height);
+  letter-spacing: -0.015em;
+  @media (width >= 48rem) {
+    font-size: var(--text-5xl);
+    line-height: 1;
+  }
+}
+@utility heading-4 {
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: var(--text-2xl);
+  line-height: var(--text-2xl--line-height);
+  @media (width >= 48rem) {
+    font-size: var(--text-3xl);
+    line-height: var(--text-3xl--line-height);
+  }
+}
+@utility title-1 {
+  font-size: var(--text-xl);
+  line-height: var(--text-xl--line-height);
+  font-weight: 500;
+}
+@utility title-3 {
+  font-size: var(--text-base);
+  line-height: var(--text-base--line-height);
+  font-weight: 500;
+}
+@utility title-4 {
+  font-size: var(--text-sm);
+  line-height: var(--text-sm--line-height);
+  font-weight: 500;
+}
+@utility body-2 {
+  font-size: var(--text-base);
+  line-height: var(--text-base--line-height);
+  font-weight: 500;
+}
+@utility body-3 {
+  font-size: var(--text-base);
+  line-height: var(--text-base--line-height);
+  font-weight: 400;
+}
+@utility body-lead {
+  font-size: var(--text-lg);
+  line-height: var(--text-lg--line-height);
+  font-weight: 400;
+}
+@utility body-6 {
+  font-size: var(--text-sm);
+  line-height: var(--text-sm--line-height);
+  font-weight: 400;
+}
+@utility button-md {
+  font-size: var(--text-base);
+  line-height: var(--text-base--line-height);
+  font-weight: 600;
+}
+@utility button-sm {
+  font-size: var(--text-sm);
+  line-height: var(--text-sm--line-height);
+  font-weight: 600;
+}
+@utility caption-4 {
+  font-size: var(--text-xs);
+  line-height: var(--text-xs--line-height);
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+@utility caption-2 {
+  font-size: var(--text-sm);
+  line-height: var(--text-sm--line-height);
+  font-weight: 400;
+}
+
+@layer base {
+  html {
+    background: var(--color-char);
+    color-scheme: dark;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    scrollbar-color: var(--color-line) var(--color-char);
+  }
+  html.lenis,
+  html.lenis body {
+    height: auto;
+  }
+  .lenis.lenis-smooth {
+    scroll-behavior: auto !important;
+  }
+  body {
+    background: var(--color-char);
+    color: var(--color-bone);
+    font-family: var(--font-sans);
+    caret-color: var(--color-ember);
+    overflow-x: clip;
+  }
+  h1,
+  h2,
+  h3 {
+    text-wrap: balance;
+  }
+  p {
+    text-wrap: pretty;
+  }
+  ::selection {
+    background: var(--color-ember);
+    color: var(--color-char);
+  }
+  :focus-visible {
+    outline: 2px solid var(--color-ember);
+    outline-offset: 3px;
+    border-radius: 4px;
+  }
+  a {
+    text-underline-offset: 0.25em;
+  }
+  .tabular {
+    font-variant-numeric: tabular-nums lining-nums;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

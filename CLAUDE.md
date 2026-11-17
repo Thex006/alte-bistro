@@ -1,0 +1,23 @@
+# Alte Bistro (agency demo)
+
+Upscale fusion bistro site, Budapest VII. Next.js 15 App Router, React 19, TypeScript, Tailwind v4, Framer Motion, Lucide, Lenis. Localhost only, no paid services, no database.
+
+## Graph first
+Before reading code broadly, read `graphify-out/GRAPH_REPORT.md` (build it with `pip install graphifyy` then `graphify update .`). Never commit `graphify-out/`.
+
+## Where things live
+- `lib/site.ts`: every fact (address, hours, prices, OpenTable URL, sample reviews). Change content here, not in components.
+- `lib/open-status.ts`: live "open now" logic in Budapest time (unit tested in `tests/`).
+- `components/`: one file per section (hero, tagline-reveal, menu-section, night-chapters, story-bento, reviews-bento, visit-section, site-footer, site-nav, mobile-book-bar).
+- `public/images/`: the client's own photographs only. `public/video/hero.*` is a placeholder film made from `chef-plating.jpg` with ffmpeg; swap in real kitchen footage with the same names.
+
+## Rules
+- Skills in `.claude/skills/` apply: landing-page-design and figma-designer (elayadesign/ai-design-skills, mandatory), design-taste-frontend, impeccable, typeui-minimal, writing-guidelines, playwright-cli and the addyosmani agent skills.
+- Brief overrides skill defaults: editorial serif (Bodoni Moda) for display with Geist for text, Lucide icons, dark palette (charcoal #131209, burnt orange #D2622A, bone #EFE8DC). No 3D in this version.
+- Only the client's photographs. No stock. Reviews are samples and must stay labelled as such until real ones arrive.
+- Copy: sentence case, no hyphens in copy, no exclamation marks, no invented facts.
+- Motion: ease `cubic-bezier(0.22,1,0.36,1)`, transform and opacity only, reveal once, respect reduced motion.
+- One primary action: Book a table (OpenTable). It must stay visible on every screen.
+
+## Checks
+`npm run typecheck`, `npm test` (vitest), then `npm run build && npm start` and `npm run test:e2e` (Playwright smoke: CTAs, images, 390px overflow, 404, legal pages). `node e2e/shoot.mjs` writes screenshots to `e2e/shots/`.
