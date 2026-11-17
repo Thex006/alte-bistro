@@ -6,100 +6,94 @@ import { useRef } from "react";
 import { EASE } from "@/lib/motion";
 
 /**
- * Art-directed photo frames. The arch comes from the brick vaults in the
- * cellar dining room, so the site's frames are the restaurant's own shape.
+ * Art-directed photo frame.
  *
- * arch     tall door shaped arch
- * portrait 4:5 upright crop
- * wide     cinematic letterbox
- * pill     fully rounded capsule
+ * shape "arch" borrows the brick vaults of the cellar dining room. Use it on a
+ * few chosen photos only; everything else stays a straight edged "rect".
+ *
+ * Sharpness: the photos are 16:9. A tall crop shows only the middle of the
+ * file, so the browser must download a wider file than the frame. `vw` is the
+ * frame's on screen width; the image request is widened by the crop factor.
  */
-export type FrameShape = "arch" | "portrait" | "wide" | "pill" | "rect";
-
-const shapeClass: Record<FrameShape, string> = {
-  arch: "aspect-[3/4]",
-  portrait: "aspect-[4/5]",
-  wide: "aspect-[21/9]",
-  pill: "aspect-[3/5]",
-  rect: "",
-};
-
-// Corner radii used inside clip-path inset(... round ...). Huge values clamp to a semicircle.
-const radius: Record<FrameShape, string> = {
-  arch: "9999px 9999px 0px 0px",
-  portrait: "0px 0px 0px 0px",
-  wide: "0px 0px 0px 0px",
-  pill: "9999px 9999px 9999px 9999px",
-  rect: "0px 0px 0px 0px",
-};
-
 type Props = {
   src: string;
   alt: string;
-  sizes: string;
-  shape?: FrameShape;
+  /** Frame width as a share of the viewport on desktop and on phones. */
+  vw: { desktop: number; mobile: number };
+  /** Frame width over height, e.g. 4 / 5. */
+  ratio: number;
+  shape?: "arch" | "rect";
   className?: string;
-  /** Thin burnt orange line frame offset behind the photo, like a mount. */
-  outline?: "left" | "right" | false;
-  /** Inner drift in percent while the frame crosses the screen. */
+  /** Thin burnt orange line set 8px down and right, the same everywhere. */
+  outline?: boolean;
   parallax?: number;
   priority?: boolean;
   /** Focal point for the crop, e.g. "50% 30%". */
   focus?: string;
 };
 
+const SOURCE_RATIO = 16 / 9;
+// Inner parallax travel plus the reveal settle need a little extra resolution.
+const MOTION_HEADROOM = 1.2;
+
+export function sizesFor(vw: { desktop: number; mobile: number }, ratio: number) {
+  const crop = Math.max(1, SOURCE_RATIO / ratio) * MOTION_HEADROOM;
+  return `(min-width: 768px) ${Math.round(vw.desktop * crop)}vw, ${Math.round(vw.mobile * crop)}vw`;
+}
+
 export function Framed({
   src,
   alt,
-  sizes,
-  shape = "arch",
+  vw,
+  ratio,
+  shape = "rect",
   className = "",
-  outline = false,
-  parallax = 6,
+  outline = true,
+  parallax = 5,
   priority,
   focus = "50% 50%",
 }: Props) {
   const ref = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start end", "end start"] });
   const y = useTransform(scrollYProgress, [0, 1], [`-${parallax}%`, `${parallax}%`]);
-  const r = radius[shape];
   // The unclipped wrapper decides visibility, so the clipped photo never hides itself from the observer.
   const inView = useInView(ref, { once: true, margin: "0px 0px -8% 0px" });
+  const r = shape === "arch" ? "9999px 9999px 0px 0px" : "0px";
+  const rounded = shape === "arch" ? "rounded-t-full" : "";
 
   return (
-    <div ref={ref} className={`relative ${shapeClass[shape]} ${className}`}>
+    <div ref={ref} className={`relative ${className}`} style={{ aspectRatio: ratio }}>
       {outline && (
         <motion.div
           aria-hidden
-          className={`absolute inset-0 border border-ember/70 ${outline === "left" ? "-translate-x-3 translate-y-3 md:-translate-x-5 md:translate-y-5" : "translate-x-3 translate-y-3 md:translate-x-5 md:translate-y-5"}`}
-          style={{ borderRadius: shape === "arch" ? "9999px 9999px 0 0" : shape === "pill" ? "9999px" : 0 }}
+          className={`absolute inset-0 translate-x-2 translate-y-2 border border-ember/70 ${rounded}`}
           initial={{ opacity: 0 }}
           animate={{ opacity: inView ? 1 : 0 }}
-          transition={{ duration: 1, ease: EASE, delay: 0.9 }}
+          transition={{ duration: 0.8, ease: EASE, delay: 0.8 }}
         />
       )}
       <motion.div
-        className="group absolute inset-0 overflow-hidden bg-smoke"
-        style={{ borderRadius: shape === "arch" ? "9999px 9999px 0 0" : shape === "pill" ? "9999px" : 0 }}
+        className={`group absolute inset-0 overflow-hidden bg-smoke ${rounded}`}
         initial={{ clipPath: `inset(100% 0% 0% 0% round ${r})` }}
         animate={{ clipPath: `inset(${inView ? 0 : 100}% 0% 0% 0% round ${r})` }}
-        transition={{ duration: 1.4, ease: EASE }}
+        transition={{ duration: 1.3, ease: EASE }}
       >
-        <motion.div style={{ y }} className="absolute -inset-y-[8%] inset-x-0 will-change-transform">
+        <motion.div style={{ y }} className="absolute -inset-y-[6%] inset-x-0 will-change-transform">
           <motion.div
             className="absolute inset-0"
-            initial={{ scale: 1.3 }}
-            animate={{ scale: inView ? 1 : 1.3 }}
-            transition={{ duration: 2, ease: EASE }}
+            initial={{ scale: 1.15 }}
+            animate={{ scale: inView ? 1 : 1.15 }}
+            transition={{ duration: 1.8, ease: EASE }}
           >
             <Image
               src={src}
               alt={alt}
               fill
-              sizes={sizes}
+              quality={90}
+              sizes={sizesFor(vw, ratio)}
               priority={priority}
               style={{ objectPosition: focus }}
-              className="object-cover transition-transform duration-1000 ease-out-expo group-hover:scale-[1.05]"
+              className="object-cover transition-transform duration-1000 ease-out-expo group-hover:scale-[1.04]"
             />
           </motion.div>
         </motion.div>

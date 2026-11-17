@@ -1,6 +1,6 @@
 "use client";
 
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence, motion, useInView } from "framer-motion";
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import { BookButton } from "./book-button";
@@ -19,6 +19,8 @@ export function MenuSection() {
   const [active, setActive] = useState(signatures[0].id);
   const current = signatures.find((d) => d.id === active) ?? signatures[0];
   const listRef = useRef<HTMLOListElement>(null);
+  const archRef = useRef<HTMLDivElement>(null);
+  const archIn = useInView(archRef, { once: true, margin: "0px 0px -8% 0px" });
 
   // Scrolling also changes the dish: the row crossing the middle of the screen wins.
   useEffect(() => {
@@ -87,10 +89,9 @@ export function MenuSection() {
                     <Framed
                       src={dish.image}
                       alt={dish.alt}
-                      sizes="80vw"
-                      shape="arch"
-                      className="mx-auto w-3/4 lg:hidden"
-                      outline={i % 2 ? "left" : "right"}
+                      vw={{ desktop: 90, mobile: 92 }}
+                      ratio={4 / 3}
+                      className="mr-2 lg:hidden"
                     />
                     <span
                       className={`font-display tabular hidden text-2xl transition-colors duration-500 md:block ${
@@ -129,12 +130,13 @@ export function MenuSection() {
           {/* Desktop arch: each dish opens upward inside the vault shape. */}
           <div className="hidden lg:col-span-5 lg:block">
             <div className="sticky top-28 mx-auto w-full max-w-[440px]">
-              <div aria-hidden className="absolute inset-0 translate-x-5 translate-y-5 rounded-t-full border border-ember/60" />
+              <div ref={archRef} className="relative">
+              <div aria-hidden className="absolute inset-0 translate-x-2 translate-y-2 rounded-t-full border border-ember/70" />
+              {/* The unclipped wrapper drives the reveal: an element clipped to nothing never reports itself in view. */}
               <motion.div
                 className="relative aspect-[3/4] overflow-hidden rounded-t-full bg-smoke"
                 initial={{ clipPath: `inset(100% 0% 0% 0% round ${ARCH})` }}
-                whileInView={{ clipPath: `inset(0% 0% 0% 0% round ${ARCH})` }}
-                viewport={{ once: true }}
+                animate={{ clipPath: `inset(${archIn ? 0 : 100}% 0% 0% 0% round ${ARCH})` }}
                 transition={{ duration: 1.4, ease: EASE }}
               >
                 <AnimatePresence initial={false}>
@@ -152,11 +154,13 @@ export function MenuSection() {
                       animate={{ scale: 1 }}
                       transition={{ duration: 1.4, ease: EASE }}
                     >
-                      <Image src={current.image} alt={current.alt} fill sizes="440px" className="object-cover" />
+                      {/* 3:4 arch over a 16:9 photo: request about 2.4x the frame width so the crop stays sharp. */}
+                      <Image src={current.image} alt={current.alt} fill quality={90} sizes="1100px" className="object-cover" />
                     </motion.div>
                   </motion.div>
                 </AnimatePresence>
               </motion.div>
+              </div>
               <div className="mt-10 flex items-center justify-between gap-4">
                 <p className="caption-2 text-bone-3">Prices in Hungarian forint</p>
                 <BookButton size="sm" />
@@ -175,19 +179,20 @@ export function MenuSection() {
           <SplitReveal as="h3" text="Also on the pass tonight" className="heading-2" />
           <ul className="mt-12 grid items-start gap-12 sm:grid-cols-12 sm:gap-6">
             {morePlates.map((p, i) => {
+              // One arch among straight frames, so the shape stays special.
               const layout = [
-                { shape: "portrait" as const, cls: "sm:col-span-4", outline: "left" as const },
-                { shape: "arch" as const, cls: "sm:col-span-4 sm:mt-32", outline: false as const },
-                { shape: "pill" as const, cls: "sm:col-span-3 sm:col-start-10 sm:mt-12", outline: "right" as const },
+                { shape: "rect" as const, ratio: 4 / 3, cls: "sm:col-span-5", vw: 38 },
+                { shape: "arch" as const, ratio: 3 / 4, cls: "sm:col-span-3 sm:mt-24", vw: 23 },
+                { shape: "rect" as const, ratio: 4 / 5, cls: "sm:col-span-3 sm:col-start-10 sm:mt-8", vw: 23 },
               ][i];
               return (
                 <li key={p.name} className={layout.cls}>
                   <Framed
                     src={p.image}
                     alt={p.alt}
-                    sizes="(min-width: 640px) 33vw, 100vw"
+                    vw={{ desktop: layout.vw, mobile: 92 }}
+                    ratio={layout.ratio}
                     shape={layout.shape}
-                    outline={layout.outline}
                   />
                   <p className="font-display mt-8 text-2xl">{p.name}</p>
                 </li>

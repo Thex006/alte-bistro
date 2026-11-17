@@ -62,6 +62,7 @@ export function Hero() {
                 fill
                 priority
                 sizes="100vw"
+                quality={90}
                 className="object-cover"
                 style={{ objectPosition: "55% 35%" }}
               />
@@ -148,10 +149,10 @@ export function Hero() {
         </motion.div>
       </motion.div>
 
-      {/* Opening curtain: charcoal panel with the monogram lifts away on load. */}
+      {/* Opening curtain: burnt orange panel with the monogram lifts away on load. */}
       <motion.div
         aria-hidden
-        className="pointer-events-none fixed inset-0 z-[70] grid place-items-center bg-char"
+        className="pointer-events-none fixed inset-0 z-[70] grid place-items-center bg-ember"
         initial={{ clipPath: "inset(0% 0% 0% 0%)" }}
         animate={{ clipPath: "inset(0% 0% 100% 0%)" }}
         transition={{ duration: 1.1, ease: [0.76, 0, 0.24, 1], delay: 0.55 }}
@@ -161,7 +162,7 @@ export function Hero() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, ease: EASE }}
         >
-          <Image src="/images/monogram.png" alt="" width={177} height={140} className="h-20 w-auto" priority />
+          <Image src="/images/monogram.png" alt="" width={177} height={140} className="h-20 w-auto brightness-0" priority />
         </motion.div>
       </motion.div>
 

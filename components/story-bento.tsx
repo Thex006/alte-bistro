@@ -19,14 +19,12 @@ export function StoryBento() {
         variants={{ hidden: {}, show: { transition: { staggerChildren: 0.08 } } }}
         className="mx-auto grid max-w-[1440px] grid-cols-1 gap-4 md:grid-cols-12 md:auto-rows-[minmax(160px,auto)]"
       >
-        <div className="relative min-h-[360px] md:col-span-7 md:row-span-3 md:mr-4">
+        <div className="md:col-span-7 md:row-span-3 md:mb-2 md:mr-2">
           <Framed
             src="/images/chefs-high-five.jpg"
             alt="Two chefs high five across the pass during service"
-            sizes="(min-width: 768px) 58vw, 100vw"
-            shape="rect"
-            className="h-full min-h-[360px]"
-            outline="left"
+            vw={{ desktop: 56, mobile: 92 }}
+            ratio={16 / 11}
             focus="50% 40%"
           />
         </div>
@@ -44,13 +42,12 @@ export function StoryBento() {
           </div>
         </motion.div>
 
-        <div className="flex items-end justify-center bg-smoke px-8 pt-8 md:col-span-3">
+        <div className="md:col-span-3 md:mb-2 md:mr-2">
           <Framed
             src="/images/menu-frame.jpg"
             alt="Brass framed Alte Bistro menu on a brick wall by the door"
-            sizes="(min-width: 768px) 20vw, 70vw"
-            shape="arch"
-            className="w-full max-w-[220px]"
+            vw={{ desktop: 24, mobile: 92 }}
+            ratio={5 / 4}
             focus="30% 50%"
           />
         </div>

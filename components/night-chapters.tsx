@@ -3,7 +3,7 @@
 import { motion, useScroll, useTransform, type MotionValue } from "framer-motion";
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
-import { Framed, type FrameShape } from "./motion/framed";
+import { Framed } from "./motion/framed";
 import { SplitReveal } from "./motion/split-reveal";
 import { chapters } from "@/lib/site";
 
@@ -11,13 +11,14 @@ import { chapters } from "@/lib/site";
  * Each hour of the night gets its own frame, so the sideways scroll reads like
  * a contact sheet laid out on a table, not a row of identical cards.
  */
-const ART: { shape: FrameShape; aspect: string; radius: string; lift: string; captionTop: boolean }[] = [
-  { shape: "portrait", aspect: "aspect-[4/5]", radius: "0px", lift: "md:-translate-y-6", captionTop: false },
-  { shape: "arch", aspect: "aspect-[3/4]", radius: "9999px 9999px 0 0", lift: "md:translate-y-10", captionTop: true },
-  { shape: "wide", aspect: "aspect-[16/10]", radius: "0px", lift: "md:-translate-y-2", captionTop: false },
-  { shape: "pill", aspect: "aspect-[3/5]", radius: "9999px", lift: "md:translate-y-6", captionTop: true },
-  { shape: "arch", aspect: "aspect-[3/4]", radius: "9999px 9999px 0 0", lift: "md:-translate-y-4", captionTop: false },
-];
+const ART: { ratio: number; arch: boolean; lift: string; captionTop: boolean }[] = [
+  { ratio: 4 / 5, arch: false, lift: "md:-translate-y-6", captionTop: false },
+  // The cellar is the one vaulted room, so it is the one arch.
+  { ratio: 3 / 4, arch: true, lift: "md:translate-y-10", captionTop: true },
+  { ratio: 16 / 10, arch: false, lift: "md:-translate-y-2", captionTop: false },
+  { ratio: 4 / 5, arch: false, lift: "md:translate-y-6", captionTop: true },
+  { ratio: 3 / 2, arch: false, lift: "md:-translate-y-4", captionTop: false },
+]
 
 export function NightChapters() {
   const ref = useRef<HTMLElement>(null);
@@ -84,13 +85,13 @@ export function NightChapters() {
         </h2>
         <ol className="mt-16 flex flex-col gap-24">
           {chapters.map((c, i) => (
-            <li key={c.time} className={i % 2 ? "pl-12" : "pr-12"}>
+            <li key={c.time} className={i % 2 ? "pl-10" : "pr-10"}>
               <Framed
                 src={c.image}
                 alt={c.alt}
-                sizes="85vw"
-                shape={ART[i].shape === "wide" ? "portrait" : ART[i].shape}
-                outline={i % 2 ? "left" : "right"}
+                vw={{ desktop: 80, mobile: 82 }}
+                ratio={ART[i].arch ? 3 / 4 : 4 / 3}
+                shape={ART[i].arch ? "arch" : "rect"}
               />
               <p className="font-display tabular mt-10 text-5xl leading-none text-ember">{c.time}</p>
               <h3 className="heading-4 mt-4">{c.title}</h3>
@@ -119,15 +120,15 @@ function Panel({ c, i, n, progress }: { c: Chapter; i: number; n: number; progre
 
   return (
     <motion.li style={{ opacity }} className={`flex shrink-0 items-end gap-10 ${art.lift}`}>
-      <div className={`relative h-[58vh] ${art.aspect}`}>
+      <div className="relative h-[58vh]" style={{ aspectRatio: art.ratio }}>
         <div
           aria-hidden
-          className={`absolute inset-0 border border-ember/60 ${i % 2 ? "-translate-x-4 translate-y-4" : "translate-x-4 translate-y-4"}`}
-          style={{ borderRadius: art.radius }}
+          className={`absolute inset-0 translate-x-2 translate-y-2 border border-ember/70 ${art.arch ? "rounded-t-full" : ""}`}
         />
-        <div className="absolute inset-0 overflow-hidden bg-smoke" style={{ borderRadius: art.radius }}>
+        <div className={`absolute inset-0 overflow-hidden bg-smoke ${art.arch ? "rounded-t-full" : ""}`}>
           <motion.div style={{ x: imgX }} className="absolute inset-y-0 -left-[10%] -right-[10%] will-change-transform">
-            <Image src={c.image} alt={c.alt} fill sizes="45vw" className="object-cover" />
+            {/* Frame is 58vh tall; a 16:9 file cropped to it with 20% drift needs about 130vh of width. */}
+            <Image src={c.image} alt={c.alt} fill quality={90} sizes="130vh" className="object-cover" />
           </motion.div>
         </div>
       </div>
