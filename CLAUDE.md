@@ -13,10 +13,12 @@ Before reading code broadly, read `graphify-out/GRAPH_REPORT.md` (build it with 
 
 ## Rules
 - Skills in `.claude/skills/` apply: landing-page-design and figma-designer (elayadesign/ai-design-skills, mandatory), design-taste-frontend, impeccable, typeui-minimal, writing-guidelines, playwright-cli and the addyosmani agent skills.
-- Brief overrides skill defaults: editorial serif (Bodoni Moda) for display with Geist for text, Lucide icons, dark palette (charcoal #131209, burnt orange #D2622A, bone #EFE8DC). No 3D in this version.
+- Brief overrides skill defaults: editorial serif (Bodoni Moda) for display with Geist for text, Lucide icons, palette charcoal #131209, burnt orange #E8622A, bone #EFE8DC, with full orange and bone sections (Thierry found all-dark too dull). No 3D in this version.
 - Only the client's photographs. No stock. Reviews are samples and must stay labelled as such until real ones arrive.
 - Copy: sentence case, no hyphens in copy, no exclamation marks, no invented facts.
-- Motion: ease `cubic-bezier(0.22,1,0.36,1)`, transform and opacity only, reveal once, respect reduced motion.
+- Motion: ease `cubic-bezier(0.22,1,0.36,1)`, transform, opacity and clip-path, reveal once. Motion is NOT switched off for prefers-reduced-motion: Thierry's Windows has Animation effects off and he wants the motion visible (decided 2026-11-17). Reusable pieces live in `components/motion/` (split-reveal, reveal-image, marquee, magnetic, scroll-progress).
+- Photos are Real-ESRGAN x4 upscales of the client's 1024px originals, colour graded (saturation, contrast, warm cast) and exported at 2560px. Keep originals out of the repo.
+- Scroll-linked useTransform ranges must stay inside 0..1 or framer's compositor animation throws and blanks the page.
 - One primary action: Book a table (OpenTable). It must stay visible on every screen.
 
 ## Checks

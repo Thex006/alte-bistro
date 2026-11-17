@@ -12,8 +12,8 @@
   --color-bone-2: #bdb5a7;
   --color-bone-3: #8f8879;
 
-  --color-ember: #d2622a;
-  --color-ember-hi: #e2733a;
+  --color-ember: #e8622a;
+  --color-ember-hi: #f47b3f;
   --color-ember-lo: #a9461b;
 
   --font-display: var(--font-bodoni), "Bodoni 72", "Didot", serif;
@@ -177,13 +177,5 @@
   }
 }
 
-@media (prefers-reduced-motion: reduce) {
-  *,
-  *::before,
-  *::after {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
-    scroll-behavior: auto !important;
-  }
-}
+/* Motion stays on even when Windows "Animation effects" is off: the client asked for it.
+   Large travel (parallax, pinned scroll) is still short and eased, never flashing. */

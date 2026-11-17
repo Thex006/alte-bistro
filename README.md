@@ -17,10 +17,11 @@ npm start
 Then open http://localhost:3000
 
 ## What is on the page
-Parallax hero film, word by word tagline reveal, signature menu with live photo panel, a pinned "one night" photo scroll, story and review bento grids, opening hours with a live "open now" line in Budapest time, and a Book a table button on every screen that goes to OpenTable.
+Opening curtain, parallax hero film, a dish name marquee that reacts to scroll speed, word by word tagline reveal, signature menu with live photo panel, a pinned "one night" photo scroll, story and review bento grids, opening hours with a live "open now" line in Budapest time, and a Book a table button on every screen that goes to OpenTable.
 
 ## Before launch
 - Put the real OpenTable link in `lib/site.ts` (`OPENTABLE_URL`).
 - Replace the sample reviews in `lib/site.ts` with real, attributed reviews.
 - Swap `public/video/hero.mp4` and `hero.webm` for real kitchen footage.
-- A full resolution suya skewers photo would replace `public/images/suya-skewers.jpg` (cut from the collage).
+- A full resolution suya skewers photo would replace `public/images/suya-skewers.jpg` (cut from the collage and upscaled twice).
+- The photos were upscaled 4x with Real-ESRGAN from 1024px originals; original full size photos from the shoot would look better still.

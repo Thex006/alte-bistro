@@ -2,7 +2,8 @@
 
 import { motion } from "framer-motion";
 import { Flame, MoonStar, Wheat } from "lucide-react";
-import Image from "next/image";
+import { RevealImage } from "./motion/reveal-image";
+import { SplitReveal } from "./motion/split-reveal";
 import { VIEWPORT, reveal } from "@/lib/motion";
 import { site } from "@/lib/site";
 
@@ -18,20 +19,16 @@ export function StoryBento() {
         variants={{ hidden: {}, show: { transition: { staggerChildren: 0.08 } } }}
         className="mx-auto grid max-w-[1440px] grid-cols-1 gap-4 md:grid-cols-12 md:auto-rows-[minmax(160px,auto)]"
       >
-        <motion.div variants={reveal} className={`${tile} group min-h-[320px] md:col-span-7 md:row-span-3`}>
-          <Image
-            src="/images/chefs-high-five.jpg"
-            alt="Two chefs high five across the pass during service"
-            fill
-            sizes="(min-width: 768px) 58vw, 100vw"
-            className="object-cover transition-transform duration-700 ease-out-expo group-hover:scale-[1.03]"
-          />
-        </motion.div>
+        <RevealImage
+          src="/images/chefs-high-five.jpg"
+          alt="Two chefs high five across the pass during service"
+          sizes="(min-width: 768px) 58vw, 100vw"
+          className="min-h-[320px] md:col-span-7 md:row-span-3"
+          from="left"
+        />
 
         <motion.div variants={reveal} className={`${tile} flex flex-col justify-between gap-8 p-8 md:col-span-5 md:row-span-2 md:p-12`}>
-          <h2 id="story-title" className="heading-2 max-w-[14ch]">
-            Street food fire, fine dining care
-          </h2>
+          <SplitReveal id="story-title" text="Street food fire, fine dining care" accent={["fire"]} className="heading-2 max-w-[14ch]" />
           <div className="flex flex-col gap-4">
             <p className="body-lead text-bone-2">
               Alte Bistro was born to bridge the gap between late night street food and fine dining.
@@ -43,15 +40,13 @@ export function StoryBento() {
           </div>
         </motion.div>
 
-        <motion.div variants={reveal} className={`${tile} group min-h-[240px] md:col-span-3`}>
-          <Image
-            src="/images/menu-frame.jpg"
-            alt="Brass framed Alte Bistro menu on a brick wall by the door"
-            fill
-            sizes="(min-width: 768px) 25vw, 100vw"
-            className="object-cover transition-transform duration-700 ease-out-expo group-hover:scale-[1.03]"
-          />
-        </motion.div>
+        <RevealImage
+          src="/images/menu-frame.jpg"
+          alt="Brass framed Alte Bistro menu on a brick wall by the door"
+          sizes="(min-width: 768px) 25vw, 100vw"
+          className="min-h-[240px] md:col-span-3"
+          from="right"
+        />
 
         <motion.div
           variants={reveal}
@@ -77,9 +72,15 @@ export function StoryBento() {
             title: "Open until one",
             body: "Wednesday to Sunday, 18:00 to 01:00. The kitchen keeps city hours.",
           },
-        ].map(({ Icon, title, body }) => (
-          <motion.div key={title} variants={reveal} className={`${tile} flex flex-col gap-6 p-8 md:col-span-4`}>
-            <Icon aria-hidden className="size-6 text-ember" strokeWidth={1.5} />
+        ].map(({ Icon, title, body }, i) => (
+          <motion.div
+            key={title}
+            variants={reveal}
+            whileHover={{ y: -6 }}
+            transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+            className={`flex flex-col gap-6 p-8 md:col-span-4 ${i === 1 ? "bg-bone text-char [&_p]:text-char/70" : tile}`}
+          >
+            <Icon aria-hidden className={`size-8 ${i === 1 ? "text-ember-lo" : "text-ember"}`} strokeWidth={1.5} />
             <div>
               <h3 className="title-1">{title}</h3>
               <p className="body-3 mt-2 text-bone-2">{body}</p>

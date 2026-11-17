@@ -8,6 +8,7 @@ import { SiteNav } from "@/components/site-nav";
 import { StoryBento } from "@/components/story-bento";
 import { TaglineReveal } from "@/components/tagline-reveal";
 import { VisitSection } from "@/components/visit-section";
+import { ScrollProgress } from "@/components/motion/scroll-progress";
 import { site } from "@/lib/site";
 
 const jsonLd = {
@@ -30,6 +31,7 @@ const jsonLd = {
 export default function Home() {
   return (
     <>
+      <ScrollProgress />
       <SiteNav />
       <main id="main">
         <Hero />

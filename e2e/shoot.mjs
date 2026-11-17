@@ -8,10 +8,10 @@ const browser = await chromium.launch();
 async function shoot(prefix, viewport, stops) {
   const page = await browser.newPage({ viewport, deviceScaleFactor: Number(process.env.DPR ?? 1) });
   await page.goto(BASE, { waitUntil: "networkidle" });
-  await page.waitForTimeout(1800);
+  await page.waitForTimeout(3200);
   for (const [name, fn] of stops) {
     await page.evaluate(fn);
-    await page.waitForTimeout(1400);
+    await page.waitForTimeout(2000);
     await page.screenshot({ path: `${OUT}/${prefix}-${name}.png` });
   }
   await page.close();

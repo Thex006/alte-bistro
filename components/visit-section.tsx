@@ -7,6 +7,7 @@ import { BookButton } from "./book-button";
 import { OpenBadge } from "./open-badge";
 import { budapestClock } from "@/lib/open-status";
 import { VIEWPORT, reveal } from "@/lib/motion";
+import { SplitReveal } from "./motion/split-reveal";
 import { hours, site } from "@/lib/site";
 
 const ORDER = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
@@ -18,16 +19,12 @@ export function VisitSection() {
   return (
     <section id="visit" aria-labelledby="visit-title" className="bg-coal px-4 py-24 md:px-12 md:py-32">
       <div className="mx-auto max-w-[1440px]">
-        <motion.h2
+        <SplitReveal
           id="visit-title"
-          variants={reveal}
-          initial="hidden"
-          whileInView="show"
-          viewport={VIEWPORT}
-          className="font-display text-5xl leading-none tracking-tight md:text-8xl lg:text-9xl"
-        >
-          Kazinczy utca 14
-        </motion.h2>
+          text="Kazinczy utca 14"
+          accent={["14"]}
+          className="font-display text-6xl leading-none tracking-tight md:text-8xl lg:text-9xl"
+        />
 
         <div className="mt-16 grid gap-12 border-t border-line pt-12 md:grid-cols-12 md:gap-8">
           <motion.div variants={reveal} initial="hidden" whileInView="show" viewport={VIEWPORT} className="md:col-span-4">

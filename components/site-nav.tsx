@@ -1,10 +1,11 @@
 "use client";
 
-import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import { BookButton } from "./book-button";
 import { OpenBadge } from "./open-badge";
+import { Magnetic } from "./motion/magnetic";
 import { EASE } from "@/lib/motion";
 import { navLinks, site } from "@/lib/site";
 
@@ -29,7 +30,6 @@ const ids = navLinks.map((l) => l.href.slice(1));
 export function SiteNav() {
   const [open, setOpen] = useState(false);
   const active = useActiveSection(ids);
-  const reduce = useReducedMotion();
 
   useEffect(() => {
     document.documentElement.style.overflow = open ? "hidden" : "";
@@ -41,9 +41,9 @@ export function SiteNav() {
   return (
     <>
       <motion.header
-        initial={reduce ? false : { opacity: 0, y: -16 }}
+        initial={{ opacity: 0, y: -24 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.7, ease: EASE, delay: 0.6 }}
+        transition={{ duration: 0.8, ease: EASE, delay: 1.2 }}
         className="fixed inset-x-0 top-4 z-50 flex justify-center px-4"
       >
         <nav
@@ -81,9 +81,9 @@ export function SiteNav() {
             })}
           </ul>
 
-          <span className="hidden md:block">
+          <Magnetic className="hidden md:inline-flex" strength={0.25}>
             <BookButton size="sm" />
-          </span>
+          </Magnetic>
 
           <button
             type="button"
