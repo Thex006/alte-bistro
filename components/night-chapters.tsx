@@ -1,26 +1,49 @@
 "use client";
 
 import { motion, useScroll, useTransform, type MotionValue } from "framer-motion";
-
-type MotionValueNum = MotionValue<number>;
-import { SplitReveal } from "./motion/split-reveal";
-import { RevealImage } from "./motion/reveal-image";
 import Image from "next/image";
-import { useRef } from "react";
+import { useEffect, useRef, useState } from "react";
+import { Framed, type FrameShape } from "./motion/framed";
+import { SplitReveal } from "./motion/split-reveal";
 import { chapters } from "@/lib/site";
 
 /**
- * The page's photo moment: one night at Alte Bistro, 18:00 to 01:00.
- * Desktop pins the section and scrolls the photographs sideways.
- * Phones get a vertical stack with wipe reveals.
+ * Each hour of the night gets its own frame, so the sideways scroll reads like
+ * a contact sheet laid out on a table, not a row of identical cards.
  */
+const ART: { shape: FrameShape; aspect: string; radius: string; lift: string; captionTop: boolean }[] = [
+  { shape: "portrait", aspect: "aspect-[4/5]", radius: "0px", lift: "md:-translate-y-6", captionTop: false },
+  { shape: "arch", aspect: "aspect-[3/4]", radius: "9999px 9999px 0 0", lift: "md:translate-y-10", captionTop: true },
+  { shape: "wide", aspect: "aspect-[16/10]", radius: "0px", lift: "md:-translate-y-2", captionTop: false },
+  { shape: "pill", aspect: "aspect-[3/5]", radius: "9999px", lift: "md:translate-y-6", captionTop: true },
+  { shape: "arch", aspect: "aspect-[3/4]", radius: "9999px 9999px 0 0", lift: "md:-translate-y-4", captionTop: false },
+];
+
 export function NightChapters() {
   const ref = useRef<HTMLElement>(null);
+  const trackRef = useRef<HTMLOListElement>(null);
+  const [travel, setTravel] = useState(0);
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start start", "end end"] });
   const n = chapters.length;
-  // The track is n panels wide; travel (n - 1) of them so the last one lands in view.
-  const x = useTransform(scrollYProgress, [0.04, 0.96], ["0%", `-${((n - 1) / n) * 100}%`]);
-  const bar = useTransform(scrollYProgress, [0.04, 0.96], [0, 1]);
+
+  // Measure the real track so the last frame lands exactly at the right edge.
+  useEffect(() => {
+    const measure = () => {
+      const t = trackRef.current;
+      if (t) setTravel(Math.max(0, t.scrollWidth - window.innerWidth));
+    };
+    measure();
+    const ro = new ResizeObserver(measure);
+    if (trackRef.current) ro.observe(trackRef.current);
+    window.addEventListener("resize", measure);
+    return () => {
+      ro.disconnect();
+      window.removeEventListener("resize", measure);
+    };
+  }, []);
+
+  const x = useTransform(scrollYProgress, [0.05, 0.95], [0, -travel]);
+  const bar = useTransform(scrollYProgress, [0.05, 0.95], [0, 1]);
 
   return (
     <section
@@ -32,38 +55,47 @@ export function NightChapters() {
     >
       {/* Desktop pinned track */}
       <div className="sticky top-0 hidden h-screen flex-col justify-center overflow-hidden md:flex">
-        <div className="mx-auto mb-8 flex w-full max-w-[1440px] items-end justify-between gap-8 px-12">
-          <SplitReveal id="night-title" text="One night on Kazinczy utca" accent={["night"]} className="heading-1 max-w-[16ch]" />
-          <div className="mb-3 h-px w-48 bg-line" aria-hidden>
-            <motion.div style={{ scaleX: bar }} className="h-px origin-left bg-ember" />
+        <div className="mx-auto mb-10 flex w-full max-w-[1440px] items-end justify-between gap-8 px-12">
+          <SplitReveal
+            id="night-title"
+            text="One night on Kazinczy utca"
+            accent={["night"]}
+            className="heading-1 max-w-[16ch]"
+          />
+          <div className="mb-3 flex items-center gap-4">
+            <span className="font-display tabular text-bone-3">18:00</span>
+            <div className="h-px w-40 bg-line" aria-hidden>
+              <motion.div style={{ scaleX: bar }} className="h-px origin-left bg-ember" />
+            </div>
+            <span className="font-display tabular text-bone-3">01:00</span>
           </div>
         </div>
-        <motion.ol style={{ x }} className="flex w-max gap-6 pl-12 pr-12 will-change-transform">
+        <motion.ol ref={trackRef} style={{ x }} className="flex w-max items-center gap-24 px-12 will-change-transform">
           {chapters.map((c, i) => (
             <Panel key={c.time} c={c} i={i} n={n} progress={scrollYProgress} />
           ))}
         </motion.ol>
       </div>
-      
-      {/* Phone: vertical chapters */}
+
+      {/* Phone: vertical chapters, each in its own frame */}
       <div className="px-4 py-24 md:hidden">
         <h2 className="heading-1 max-w-[16ch]" id="night-title-mobile">
-          One night on Kazinczy utca
+          One night on <span className="text-ember">Kazinczy utca</span>
         </h2>
-        <ol className="mt-12 flex flex-col gap-16">
-          {chapters.map((c) => (
-            <motion.li
-              key={c.time}
-              initial={{ opacity: 0, y: 32 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: "0px 0px -10% 0px" }}
-              transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
-            >
-              <RevealImage src={c.image} alt={c.alt} sizes="100vw" className="aspect-[16/10]" />
-              <p className="font-display tabular mt-6 text-5xl leading-none text-ember">{c.time}</p>
+        <ol className="mt-16 flex flex-col gap-24">
+          {chapters.map((c, i) => (
+            <li key={c.time} className={i % 2 ? "pl-12" : "pr-12"}>
+              <Framed
+                src={c.image}
+                alt={c.alt}
+                sizes="85vw"
+                shape={ART[i].shape === "wide" ? "portrait" : ART[i].shape}
+                outline={i % 2 ? "left" : "right"}
+              />
+              <p className="font-display tabular mt-10 text-5xl leading-none text-ember">{c.time}</p>
               <h3 className="heading-4 mt-4">{c.title}</h3>
               <p className="body-3 mt-2 text-bone-2">{c.body}</p>
-            </motion.li>
+            </li>
           ))}
         </ol>
       </div>
@@ -73,29 +105,37 @@ export function NightChapters() {
 
 type Chapter = (typeof chapters)[number];
 
-function Panel({ c, i, n, progress }: { c: Chapter; i: number; n: number; progress: MotionValueNum }) {
-  // Each panel's photo drifts and settles as it travels through the viewport.
-  const centre = (i / (n - 1)) * 0.92 + 0.04;
-  // Offsets stay inside 0..1: scroll-linked transforms run on the compositor and reject anything else.
-  const lo = Math.max(0, centre - 0.25);
-  const hi = Math.min(1, centre + 0.25);
-  const imgX = useTransform(progress, [lo, hi], ["-12%", "12%"]);
-  const scale = useTransform(progress, centre <= lo ? [lo, hi] : centre >= hi ? [lo, hi] : [lo, centre, hi], centre <= lo ? [1, 0.86] : centre >= hi ? [0.86, 1] : [0.86, 1, 0.86]);
-  const opacity = useTransform(progress, centre <= lo ? [lo, hi] : centre >= hi ? [lo, hi] : [lo, centre, hi], centre <= lo ? [1, 0.4] : centre >= hi ? [0.4, 1] : [0.4, 1, 0.4]);
+function Panel({ c, i, n, progress }: { c: Chapter; i: number; n: number; progress: MotionValue<number> }) {
+  const art = ART[i % ART.length];
+  // Where this panel sits in the scroll. Ranges stay inside 0..1: scroll-linked
+  // transforms run on the compositor and reject anything outside it.
+  const centre = 0.05 + (i / (n - 1)) * 0.9;
+  const lo = Math.max(0, centre - 0.28);
+  const hi = Math.min(1, centre + 0.28);
+  const imgX = useTransform(progress, [lo, hi], ["-8%", "8%"]);
+  const pts = [lo, centre, hi].filter((v, k, a) => k === 0 || v > a[k - 1]);
+  const dim = pts.length === 3 ? [0.45, 1, 0.45] : centre <= lo ? [1, 0.45] : [0.45, 1];
+  const opacity = useTransform(progress, pts, dim);
+
   return (
-    <motion.li style={{ scale, opacity }} className="w-[72vw] max-w-none shrink-0 origin-bottom-left">
-      <figure className="grid grid-cols-[1fr_minmax(240px,320px)] items-end gap-8">
-        <div className="relative aspect-[16/9] overflow-hidden">
-          <motion.div style={{ x: imgX }} className="absolute inset-y-0 -left-[14%] -right-[14%]">
-            <Image src={c.image} alt={c.alt} fill sizes="60vw" className="object-cover" />
+    <motion.li style={{ opacity }} className={`flex shrink-0 items-end gap-10 ${art.lift}`}>
+      <div className={`relative h-[58vh] ${art.aspect}`}>
+        <div
+          aria-hidden
+          className={`absolute inset-0 border border-ember/60 ${i % 2 ? "-translate-x-4 translate-y-4" : "translate-x-4 translate-y-4"}`}
+          style={{ borderRadius: art.radius }}
+        />
+        <div className="absolute inset-0 overflow-hidden bg-smoke" style={{ borderRadius: art.radius }}>
+          <motion.div style={{ x: imgX }} className="absolute inset-y-0 -left-[10%] -right-[10%] will-change-transform">
+            <Image src={c.image} alt={c.alt} fill sizes="45vw" className="object-cover" />
           </motion.div>
         </div>
-        <figcaption className="pb-2">
-          <p className="font-display tabular text-7xl leading-none text-ember">{c.time}</p>
-          <h3 className="heading-4 mt-6">{c.title}</h3>
-          <p className="body-3 mt-3 text-bone-2">{c.body}</p>
-        </figcaption>
-      </figure>
+      </div>
+      <div className={`w-[280px] ${art.captionTop ? "self-start pt-6" : "pb-2"}`}>
+        <p className="font-display tabular text-7xl leading-none text-ember">{c.time}</p>
+        <h3 className="heading-4 mt-6">{c.title}</h3>
+        <p className="body-3 mt-3 text-bone-2">{c.body}</p>
+      </div>
     </motion.li>
   );
 }

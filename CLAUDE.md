@@ -9,14 +9,15 @@ Before reading code broadly, read `graphify-out/GRAPH_REPORT.md` (build it with 
 - `lib/site.ts`: every fact (address, hours, prices, OpenTable URL, sample reviews). Change content here, not in components.
 - `lib/open-status.ts`: live "open now" logic in Budapest time (unit tested in `tests/`).
 - `components/`: one file per section (hero, tagline-reveal, menu-section, night-chapters, story-bento, reviews-bento, visit-section, site-footer, site-nav, mobile-book-bar).
-- `public/images/`: the client's own photographs only. `public/video/hero.*` is a placeholder film made from `chef-plating.jpg` with ffmpeg; swap in real kitchen footage with the same names.
+- `public/images/`: the client's own photographs only. The hero shows `chef-plating.jpg` with a CSS compositor drift (`.hero-drift`); a video baked with ffmpeg zoompan stuttered. Set `HERO_VIDEO` in `components/hero.tsx` when real footage arrives.
 
 ## Rules
 - Skills in `.claude/skills/` apply: landing-page-design and figma-designer (elayadesign/ai-design-skills, mandatory), design-taste-frontend, impeccable, typeui-minimal, writing-guidelines, playwright-cli and the addyosmani agent skills.
-- Brief overrides skill defaults: editorial serif (Bodoni Moda) for display with Geist for text, Lucide icons, palette charcoal #131209, burnt orange #E8622A, bone #EFE8DC, with full orange and bone sections (Thierry found all-dark too dull). No 3D in this version.
+- Brief overrides skill defaults: editorial serif (Bodoni Moda) for display with Geist for text, Lucide icons, palette charcoal #131209, burnt orange #E8622A, bone #EFE8DC. Every section stays dark; orange is an accent only (words, prices, lines, CTA, outline frames). Thierry rejected full orange and bone sections on 2026-11-17. No 3D in this version.
 - Only the client's photographs. No stock. Reviews are samples and must stay labelled as such until real ones arrive.
 - Copy: sentence case, no hyphens in copy, no exclamation marks, no invented facts.
-- Motion: ease `cubic-bezier(0.22,1,0.36,1)`, transform, opacity and clip-path, reveal once. Motion is NOT switched off for prefers-reduced-motion: Thierry's Windows has Animation effects off and he wants the motion visible (decided 2026-11-17). Reusable pieces live in `components/motion/` (split-reveal, reveal-image, marquee, magnetic, scroll-progress).
+- Motion: ease `cubic-bezier(0.22,1,0.36,1)`, transform, opacity and clip-path, reveal once. Motion is NOT switched off for prefers-reduced-motion: Thierry's Windows has Animation effects off and he wants the motion visible (decided 2026-11-17). Reusable pieces live in `components/motion/` (split-reveal, framed, marquee, magnetic, scroll-progress).
+- Photo framing: use `components/motion/framed.tsx` shapes (arch from the cellar vaults, portrait, wide, pill) with offset ember outline frames. Never plain identical squares or tilted cursor cards.
 - Photos are Real-ESRGAN x4 upscales of the client's 1024px originals, colour graded (saturation, contrast, warm cast) and exported at 2560px. Keep originals out of the repo.
 - Scroll-linked useTransform ranges must stay inside 0..1 or framer's compositor animation throws and blanks the page.
 - One primary action: Book a table (OpenTable). It must stay visible on every screen.

@@ -6,6 +6,9 @@ import { Marquee } from "./motion/marquee";
 
 const TAGLINE = "Born to bridge the gap between late night street food and fine dining";
 
+/** Words that light up in burnt orange: the two worlds the bistro bridges. */
+const ACCENT = new Set(["street", "food", "fine", "dining"]);
+
 const BAND = [
   "Truffle suya skewers",
   "Nyíregyháza duck breast",
@@ -27,18 +30,18 @@ function Word({
 }) {
   const start = index / total;
   const end = start + 1 / total;
-  const opacity = useTransform(progress, [start, end], [0.22, 1]);
+  const opacity = useTransform(progress, [start, end], [0.16, 1]);
   const y = useTransform(progress, [start, end], [12, 0]);
   return (
-    <motion.span style={{ opacity, y }} className="inline-block whitespace-pre">
+    <motion.span style={{ opacity, y }} className={`inline-block whitespace-pre ${ACCENT.has(word) ? "text-ember" : ""}`}>
       {word}{" "}
     </motion.span>
   );
 }
 
 /**
- * A full burnt orange band. The dish names run past in a marquee that reacts
- * to scroll speed, then the tagline lights up word by word (landing-page-design B11).
+ * Dark and quiet: the dish names run past in outlined type that reacts to scroll
+ * speed, then the tagline lights up word by word (landing-page-design B11).
  */
 export function TaglineReveal() {
   const ref = useRef<HTMLParagraphElement>(null);
@@ -46,10 +49,10 @@ export function TaglineReveal() {
   const words = TAGLINE.split(" ");
 
   return (
-    <section aria-label="Our promise" className="bg-ember text-char">
+    <section aria-label="Our promise" className="bg-char text-bone">
       <Marquee
         items={BAND}
-        className="font-display border-y border-char/15 py-6 text-4xl leading-none md:py-8 md:text-7xl"
+        className="marquee-outline font-display border-y border-line py-6 text-4xl leading-none md:py-8 md:text-7xl"
       />
       <div className="mx-auto max-w-[1440px] px-4 py-24 md:px-12 md:py-40">
         <p ref={ref} className="heading-1 max-w-[18ch] md:text-8xl" aria-label={TAGLINE}>
@@ -62,7 +65,7 @@ export function TaglineReveal() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "0px 0px -10% 0px" }}
           transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
-          className="body-lead mt-12 max-w-[40ch] font-medium md:ml-auto md:mt-16"
+          className="body-lead mt-12 max-w-[40ch] text-bone-2 md:ml-auto md:mt-16"
         >
           Bold West African spices meet premium Hungarian ingredients. One kitchen, open late, cooking for
           the city after dark.

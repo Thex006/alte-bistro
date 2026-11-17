@@ -2,7 +2,7 @@
 
 import { motion } from "framer-motion";
 import { Flame, MoonStar, Wheat } from "lucide-react";
-import { RevealImage } from "./motion/reveal-image";
+import { Framed } from "./motion/framed";
 import { SplitReveal } from "./motion/split-reveal";
 import { VIEWPORT, reveal } from "@/lib/motion";
 import { site } from "@/lib/site";
@@ -19,13 +19,17 @@ export function StoryBento() {
         variants={{ hidden: {}, show: { transition: { staggerChildren: 0.08 } } }}
         className="mx-auto grid max-w-[1440px] grid-cols-1 gap-4 md:grid-cols-12 md:auto-rows-[minmax(160px,auto)]"
       >
-        <RevealImage
-          src="/images/chefs-high-five.jpg"
-          alt="Two chefs high five across the pass during service"
-          sizes="(min-width: 768px) 58vw, 100vw"
-          className="min-h-[320px] md:col-span-7 md:row-span-3"
-          from="left"
-        />
+        <div className="relative min-h-[360px] md:col-span-7 md:row-span-3 md:mr-4">
+          <Framed
+            src="/images/chefs-high-five.jpg"
+            alt="Two chefs high five across the pass during service"
+            sizes="(min-width: 768px) 58vw, 100vw"
+            shape="rect"
+            className="h-full min-h-[360px]"
+            outline="left"
+            focus="50% 40%"
+          />
+        </div>
 
         <motion.div variants={reveal} className={`${tile} flex flex-col justify-between gap-8 p-8 md:col-span-5 md:row-span-2 md:p-12`}>
           <SplitReveal id="story-title" text="Street food fire, fine dining care" accent={["fire"]} className="heading-2 max-w-[14ch]" />
@@ -40,19 +44,22 @@ export function StoryBento() {
           </div>
         </motion.div>
 
-        <RevealImage
-          src="/images/menu-frame.jpg"
-          alt="Brass framed Alte Bistro menu on a brick wall by the door"
-          sizes="(min-width: 768px) 25vw, 100vw"
-          className="min-h-[240px] md:col-span-3"
-          from="right"
-        />
+        <div className="flex items-end justify-center bg-smoke px-8 pt-8 md:col-span-3">
+          <Framed
+            src="/images/menu-frame.jpg"
+            alt="Brass framed Alte Bistro menu on a brick wall by the door"
+            sizes="(min-width: 768px) 20vw, 70vw"
+            shape="arch"
+            className="w-full max-w-[220px]"
+            focus="30% 50%"
+          />
+        </div>
 
         <motion.div
           variants={reveal}
-          className="flex flex-col justify-between gap-6 bg-ember p-8 text-char md:col-span-2"
+          className="flex flex-col justify-between gap-6 border border-ember/50 p-8 md:col-span-2"
         >
-          <p className="caption-4">As featured in</p>
+          <p className="caption-4 text-ember">As featured in</p>
           <p className="font-display text-2xl leading-8">{site.press}</p>
         </motion.div>
 
@@ -72,15 +79,15 @@ export function StoryBento() {
             title: "Open until one",
             body: "Wednesday to Sunday, 18:00 to 01:00. The kitchen keeps city hours.",
           },
-        ].map(({ Icon, title, body }, i) => (
+        ].map(({ Icon, title, body }) => (
           <motion.div
             key={title}
             variants={reveal}
             whileHover={{ y: -6 }}
             transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
-            className={`flex flex-col gap-6 p-8 md:col-span-4 ${i === 1 ? "bg-bone text-char [&_p]:text-char/70" : tile}`}
+            className={`${tile} flex flex-col gap-6 p-8 md:col-span-4`}
           >
-            <Icon aria-hidden className={`size-8 ${i === 1 ? "text-ember-lo" : "text-ember"}`} strokeWidth={1.5} />
+            <Icon aria-hidden className="size-8 text-ember" strokeWidth={1.5} />
             <div>
               <h3 className="title-1">{title}</h3>
               <p className="body-3 mt-2 text-bone-2">{body}</p>

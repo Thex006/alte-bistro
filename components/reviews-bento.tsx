@@ -38,17 +38,17 @@ export function ReviewsBento() {
           variants={{ hidden: {}, show: { transition: { staggerChildren: 0.08 } } }}
           className="mt-12 grid gap-4 md:grid-cols-12"
         >
-          <motion.li variants={reveal} className="flex flex-col justify-between gap-12 bg-ember p-8 text-char md:col-span-7 md:row-span-2 md:p-12">
-            <Quote aria-hidden className="size-10" strokeWidth={1.5} />
+          <motion.li variants={reveal} className="flex flex-col justify-between gap-12 border border-ember/40 bg-smoke p-8 md:col-span-7 md:row-span-2 md:p-12">
+            <Quote aria-hidden className="size-12 text-ember" strokeWidth={1.25} />
             <blockquote className="font-display text-3xl leading-9 md:text-5xl md:leading-[1.1]">
               {lead.quote}
             </blockquote>
             <footer className="flex flex-wrap items-center justify-between gap-4">
               <div>
                 <p className="title-3">{lead.name}</p>
-                <p className="caption-2 text-char/70">{lead.context}</p>
+                <p className="caption-2 text-bone-3">{lead.context}</p>
               </div>
-              <Stars className="text-char" />
+              <Stars />
             </footer>
           </motion.li>
 

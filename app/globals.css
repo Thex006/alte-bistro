@@ -130,6 +130,30 @@
   font-weight: 400;
 }
 
+/* Hero slow push in: transform only, so it runs on the compositor at full frame rate. */
+@keyframes hero-drift {
+  from {
+    transform: scale(1) translate3d(0, 0, 0);
+  }
+  to {
+    transform: scale(1.08) translate3d(-1.5%, -1%, 0);
+  }
+}
+.hero-drift {
+  position: relative;
+  animation: hero-drift 24s cubic-bezier(0.45, 0, 0.55, 1) infinite alternate;
+  will-change: transform;
+}
+
+/* Marquee: outlined serif letters, diamonds in burnt orange. */
+.marquee-outline {
+  color: transparent;
+  -webkit-text-stroke: 1px rgb(239 232 220 / 0.45);
+}
+.marquee-outline [aria-hidden] {
+  background: var(--color-ember);
+}
+
 @layer base {
   html {
     background: var(--color-char);

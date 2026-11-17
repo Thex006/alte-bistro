@@ -12,13 +12,15 @@ import { site } from "@/lib/site";
 
 const lines = ["West African heat,", "Hungarian comfort"];
 
+/** Set to "/video/hero.mp4" once the restaurant supplies real kitchen footage. */
+const HERO_VIDEO: string | null = null;
+
 export function Hero() {
   const ref = useRef<HTMLElement>(null);
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start start", "end start"] });
 
-  // Parallax: the film drifts slower than the page and pushes in slightly.
-  const videoY = useTransform(scrollYProgress, [0, 1], ["0%", "30%"]);
-  const videoScale = useTransform(scrollYProgress, [0, 1], [1.06, 1.2]);
+  // Parallax: the media drifts at a third of the page speed.
+  const mediaY = useTransform(scrollYProgress, [0, 1], ["0%", "30%"]);
   const copyY = useTransform(scrollYProgress, [0, 1], ["0%", "-24%"]);
   const copyOpacity = useTransform(scrollYProgress, [0, 0.7], [1, 0]);
 
@@ -29,31 +31,53 @@ export function Hero() {
       aria-labelledby="hero-title"
       className="relative isolate flex min-h-[100svh] flex-col justify-end overflow-hidden"
     >
-      <motion.div style={{ y: videoY, scale: videoScale }} className="absolute inset-0 -z-20 will-change-transform">
+      {/* Media layer. Scroll moves it with one GPU transform; nothing here repaints per frame. */}
+      <motion.div style={{ y: mediaY }} className="absolute inset-0 -z-20 will-change-transform">
         <motion.div
-          className="size-full"
-          initial={{ scale: 1.35, filter: "brightness(0.4)" }}
-          animate={{ scale: 1, filter: "brightness(1)" }}
-          transition={{ duration: 2.2, ease: EASE, delay: 0.5 }}
+          className="size-full will-change-transform"
+          initial={{ scale: 1.18 }}
+          animate={{ scale: 1 }}
+          transition={{ duration: 2.4, ease: EASE, delay: 0.5 }}
         >
-        {/* Placeholder film cut from the client's chef plating photo. Swap hero.mp4/webm for the real kitchen footage. */}
-        <video
-          className="size-full object-cover"
-          autoPlay
-          muted
-          loop
-          playsInline
-          preload="auto"
-          poster="/images/hero-poster.jpg"
-          aria-hidden
-        >
-          <source src="/video/hero.webm" type="video/webm" />
-          <source src="/video/hero.mp4" type="video/mp4" />
-        </video>
+          {HERO_VIDEO ? (
+            <video
+              className="size-full object-cover"
+              autoPlay
+              muted
+              loop
+              playsInline
+              preload="metadata"
+              poster="/images/hero-poster.jpg"
+              aria-hidden
+            >
+              <source src={HERO_VIDEO} type="video/mp4" />
+            </video>
+          ) : (
+            // Until the real kitchen footage arrives: the chef plating photo with a slow,
+            // compositor-only push in. Smoother than a zoom baked into a video file.
+            <div className="hero-drift size-full">
+              <Image
+                src="/images/chef-plating.jpg"
+                alt=""
+                fill
+                priority
+                sizes="100vw"
+                className="object-cover"
+                style={{ objectPosition: "55% 35%" }}
+              />
+            </div>
+          )}
         </motion.div>
       </motion.div>
-      {/* Flat scrims for legibility, no gradients. */}
+      {/* Flat scrim for legibility, plus a load fade that animates opacity only. */}
       <div aria-hidden className="absolute inset-0 -z-10 bg-char/50" />
+      <motion.div
+        aria-hidden
+        className="absolute inset-0 -z-10 bg-char"
+        initial={{ opacity: 1 }}
+        animate={{ opacity: 0 }}
+        transition={{ duration: 1.8, ease: EASE, delay: 0.6 }}
+      />
 
       <motion.div
         style={{ y: copyY, opacity: copyOpacity }}
@@ -124,10 +148,10 @@ export function Hero() {
         </motion.div>
       </motion.div>
 
-      {/* Opening curtain: burnt orange panel with the monogram lifts away on load. */}
+      {/* Opening curtain: charcoal panel with the monogram lifts away on load. */}
       <motion.div
         aria-hidden
-        className="pointer-events-none fixed inset-0 z-[70] grid place-items-center bg-ember"
+        className="pointer-events-none fixed inset-0 z-[70] grid place-items-center bg-char"
         initial={{ clipPath: "inset(0% 0% 0% 0%)" }}
         animate={{ clipPath: "inset(0% 0% 100% 0%)" }}
         transition={{ duration: 1.1, ease: [0.76, 0, 0.24, 1], delay: 0.55 }}
@@ -137,7 +161,7 @@ export function Hero() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, ease: EASE }}
         >
-          <Image src="/images/monogram.png" alt="" width={177} height={140} className="h-20 w-auto brightness-0" priority />
+          <Image src="/images/monogram.png" alt="" width={177} height={140} className="h-20 w-auto" priority />
         </motion.div>
       </motion.div>
 
