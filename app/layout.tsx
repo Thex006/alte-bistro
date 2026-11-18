@@ -34,18 +34,24 @@ export const metadata: Metadata = {
   twitter: { card: "summary_large_image", images: ["/og.jpg"] },
 };
 
+const THEME_SCRIPT = `try{var t=localStorage.getItem("alte-theme");if(t==="light"||t==="dark")document.documentElement.dataset.theme=t}catch(e){}`;
+
 export const viewport: Viewport = {
   themeColor: "#131209",
-  colorScheme: "dark",
+  colorScheme: "dark light",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={`${bodoni.variable} ${geist.variable}`}>
+    <html lang="en" data-theme="dark" className={`${bodoni.variable} ${geist.variable}`} suppressHydrationWarning>
+      <head>
+        {/* Apply the saved theme before first paint so light mode never flashes dark. Dark is the default. */}
+        <script dangerouslySetInnerHTML={{ __html: THEME_SCRIPT }} />
+      </head>
       <body>
         <a
           href="#main"
-          className="button-sm fixed left-4 top-4 z-[100] -translate-y-24 rounded-full bg-ember px-3 py-2 text-char transition-transform duration-300 ease-out-expo focus:translate-y-0"
+          className="button-sm fixed left-4 top-4 z-[100] -translate-y-24 rounded-full bg-ember px-3 py-2 text-ink transition-transform duration-300 ease-out-expo focus:translate-y-0"
         >
           Skip to content
         </a>

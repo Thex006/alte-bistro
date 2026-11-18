@@ -5,6 +5,7 @@ import Image from "next/image";
 import { useEffect, useState } from "react";
 import { BookButton } from "./book-button";
 import { OpenBadge } from "./open-badge";
+import { ThemeToggle } from "./theme-toggle";
 import { Magnetic } from "./motion/magnetic";
 import { EASE } from "@/lib/motion";
 import { navLinks, site } from "@/lib/site";
@@ -51,7 +52,7 @@ export function SiteNav() {
           className="flex w-full max-w-fit items-center gap-2 rounded-full border border-bone/10 bg-char/70 p-2 pl-4 shadow-[0_8px_32px_rgb(0_0_0/0.35)] backdrop-blur-xl max-md:w-full max-md:max-w-none max-md:justify-between"
         >
           <a href="#top" className="flex items-center gap-3 rounded-full pr-2" aria-label={`${site.name}, back to top`}>
-            <Image src="/images/monogram.png" alt="" width={177} height={140} className="h-6 w-auto" priority />
+            <Image src="/images/monogram.png" alt="" width={177} height={140} className="theme-logo h-6 w-auto" priority />
             <span className="title-4 whitespace-nowrap tracking-[0.18em] uppercase">Alte Bistro</span>
           </a>
 
@@ -80,6 +81,8 @@ export function SiteNav() {
               );
             })}
           </ul>
+
+          <ThemeToggle className="max-md:ml-auto max-md:size-9" />
 
           <Magnetic className="hidden md:inline-flex" strength={0.25}>
             <BookButton size="sm" />

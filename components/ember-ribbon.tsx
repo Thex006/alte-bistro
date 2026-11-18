@@ -21,7 +21,7 @@ export function EmberRibbon() {
         <Marquee
           items={FRONT}
           baseSpeed={3}
-          className="font-display bg-ember py-3 text-2xl uppercase tracking-wide text-char shadow-[0_24px_60px_rgba(0,0,0,0.6)] md:py-4 md:text-4xl"
+          className="font-display bg-ember py-3 text-2xl uppercase tracking-wide text-ink shadow-[0_24px_60px_rgba(0,0,0,0.6)] md:py-4 md:text-4xl"
         />
       </div>
     </div>

@@ -42,7 +42,7 @@ export function Hero() {
       ref={ref}
       id="top"
       aria-labelledby="hero-title"
-      className="relative isolate flex min-h-[100svh] flex-col justify-end overflow-hidden"
+      className="theme-dark relative isolate flex min-h-[100svh] flex-col justify-end overflow-hidden text-bone"
     >
       {/* Media layer. Scroll moves it with one GPU transform; nothing here repaints per frame. */}
       <motion.div style={{ y: mediaY }} className="absolute inset-0 -z-20 will-change-transform">
@@ -170,7 +170,7 @@ export function Hero() {
         initial={{ opacity: 0, scale: 0.4 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 1, ease: EASE, delay: LIFT + 1 }}
-        className="group absolute right-12 top-32 hidden size-36 rounded-full bg-ember text-char shadow-[0_20px_60px_rgba(232,98,42,0.35)] md:block xl:right-20 xl:top-36"
+        className="group absolute right-12 top-32 hidden size-36 rounded-full bg-ember text-ink shadow-[0_20px_60px_rgba(232,98,42,0.35)] md:block xl:right-20 xl:top-36"
       >
         <svg viewBox="0 0 120 120" className="badge-spin absolute inset-0 size-full" aria-hidden>
           <defs>
@@ -188,7 +188,7 @@ export function Hero() {
       {/* Loader: the monogram, a count to 100 and a line filling, then the orange curtain lifts. */}
       <motion.div
         aria-hidden
-        className="pointer-events-none fixed inset-0 z-[70] bg-ember text-char"
+        className="pointer-events-none fixed inset-0 z-[70] bg-ember text-ink"
         initial={{ clipPath: "inset(0% 0% 0% 0%)" }}
         animate={{ clipPath: "inset(0% 0% 100% 0%)" }}
         transition={{ duration: 1.1, ease: [0.76, 0, 0.24, 1], delay: LIFT }}
@@ -203,8 +203,8 @@ export function Hero() {
           <p className="caption-2 uppercase tracking-[0.2em]">Kazinczy utca 14, Budapest</p>
           <motion.p className="font-display tabular text-7xl leading-none md:text-9xl">{shown}</motion.p>
         </div>
-        <div className="absolute inset-x-0 bottom-0 h-1 bg-char/15">
-          <motion.div style={{ scaleX: bar }} className="h-full origin-left bg-char" />
+        <div className="absolute inset-x-0 bottom-0 h-1 bg-ink/15">
+          <motion.div style={{ scaleX: bar }} className="h-full origin-left bg-ink" />
         </div>
       </motion.div>
 

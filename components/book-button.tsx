@@ -17,7 +17,7 @@ export function BookButton({ size = "md", className = "", label = "Book a table"
       target="_blank"
       rel="noopener noreferrer"
       data-cta="book"
-      className={`group inline-flex shrink-0 items-center justify-center rounded-full bg-ember text-char transition-[transform,background-color] duration-300 ease-out-expo hover:bg-ember-hi active:scale-[0.97] ${sizes[size]} ${className}`}
+      className={`group inline-flex shrink-0 items-center justify-center rounded-full bg-ember text-ink transition-[transform,background-color] duration-300 ease-out-expo hover:bg-ember-hi active:scale-[0.97] ${sizes[size]} ${className}`}
     >
       <span>{label}</span>
       <ArrowUpRight

@@ -13,7 +13,7 @@ export function SiteFooter() {
             alt="Alte Bistro"
             width={504}
             height={232}
-            className="h-auto w-56 md:w-72"
+            className="theme-logo h-auto w-56 md:w-72"
           />
           <BookButton size="lg" />
         </div>
