@@ -10,6 +10,8 @@ export function SmoothScroll() {
     if (coarse) return;
 
     const lenis = new Lenis({ lerp: 0.1, anchors: { offset: -24 } });
+    // Lets sections scroll to a point smoothly (the dish rail).
+    (window as unknown as { __lenis?: Lenis }).__lenis = lenis;
     let raf = 0;
     const loop = (t: number) => {
       lenis.raf(t);
@@ -19,6 +21,7 @@ export function SmoothScroll() {
     return () => {
       cancelAnimationFrame(raf);
       lenis.destroy();
+      delete (window as unknown as { __lenis?: Lenis }).__lenis;
     };
   }, []);
   return null;

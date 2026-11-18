@@ -2,6 +2,7 @@
 
 import { motion, useScroll, useTransform, type MotionValue } from "framer-motion";
 import { useRef } from "react";
+import { FloatingFood } from "./motion/floating-food";
 import { Marquee } from "./motion/marquee";
 
 const TAGLINE = "Born to bridge the gap between late night street food and fine dining";
@@ -47,6 +48,8 @@ export function TaglineReveal() {
   const ref = useRef<HTMLParagraphElement>(null);
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start 0.85", "end 0.45"] });
   const words = TAGLINE.split(" ");
+  const stage = useRef<HTMLDivElement>(null);
+  const { scrollYProgress: float } = useScroll({ target: stage, offset: ["start end", "end start"] });
 
   return (
     <section aria-label="Our promise" className="bg-char text-bone">
@@ -54,7 +57,9 @@ export function TaglineReveal() {
         items={BAND}
         className="marquee-outline font-display border-y border-line py-6 text-4xl leading-none md:py-8 md:text-7xl"
       />
-      <div className="mx-auto max-w-[1440px] px-4 py-24 md:px-12 md:py-40">
+      <div ref={stage} className="relative overflow-hidden">
+      <FloatingFood progress={float} />
+      <div className="relative z-20 mx-auto max-w-[1440px] px-4 pb-72 pt-40 md:px-12 md:py-48">
         <p ref={ref} className="heading-1 max-w-[18ch] md:text-8xl" aria-label={TAGLINE}>
           {words.map((w, i) => (
             <Word key={i} word={w} index={i} total={words.length} progress={scrollYProgress} />
@@ -70,6 +75,7 @@ export function TaglineReveal() {
           Bold West African spices meet premium Hungarian ingredients. One kitchen, open late, cooking for
           the city after dark.
         </motion.p>
+      </div>
       </div>
     </section>
   );

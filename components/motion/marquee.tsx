@@ -21,10 +21,12 @@ export function Marquee({
   items,
   baseSpeed = 2.5,
   className = "",
+  reverse = false,
 }: {
   items: readonly string[];
   baseSpeed?: number;
   className?: string;
+  reverse?: boolean;
 }) {
   const x = useMotionValue(0);
   const { scrollY } = useScroll();
@@ -39,7 +41,7 @@ export function Marquee({
     if (f < 0) dir.current = -1;
     else if (f > 0) dir.current = 1;
     move += dir.current * move * Math.abs(f);
-    x.set(x.get() - move);
+    x.set(x.get() - (reverse ? -move : move));
   });
 
   const row = items.map((t, i) => (

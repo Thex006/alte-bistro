@@ -146,6 +146,15 @@
 }
 
 /* Marquee: outlined serif letters, diamonds in burnt orange. */
+.badge-spin {
+  animation: badge-spin 16s linear infinite;
+}
+@keyframes badge-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
 .marquee-outline {
   color: transparent;
   -webkit-text-stroke: 1px rgb(239 232 220 / 0.45);

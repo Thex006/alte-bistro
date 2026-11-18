@@ -42,6 +42,10 @@ export type Dish = {
   note: string;
   image: string;
   alt: string;
+  /** The dish cut out of the client's own photo, transparent background. */
+  cutout: string;
+  /** What the note names, pinned to a spot on the cutout (x and y in %). */
+  labels: { text: string; x: number; y: number }[];
 };
 
 /** The three signatures from the brief, with the brief's prices. */
@@ -53,6 +57,12 @@ export const signatures: Dish[] = [
     note: "Suya spice from the West African grill, finished with truffle",
     image: "/images/suya-skewers.jpg",
     alt: "Charred suya skewers with micro herbs on a stoneware plate",
+    cutout: "/images/cut/suya-skewers.webp",
+    labels: [
+      { text: "Suya spice", x: 30, y: 52 },
+      { text: "Finished with truffle", x: 52, y: 30 },
+      { text: "Off the West African grill", x: 80, y: 72 },
+    ],
   },
   {
     id: "duck",
@@ -61,6 +71,12 @@ export const signatures: Dish[] = [
     note: "Hungarian duck, seared pink, over a golden purée and dark jus",
     image: "/images/duck-breast.jpg",
     alt: "Sliced pink duck breast on orange purée with dark jus",
+    cutout: "/images/cut/duck-breast.webp",
+    labels: [
+      { text: "Hungarian duck, seared pink", x: 62, y: 30 },
+      { text: "Golden purée", x: 16, y: 42 },
+      { text: "Dark jus", x: 40, y: 88 },
+    ],
   },
   {
     id: "jack",
@@ -69,6 +85,12 @@ export const signatures: Dish[] = [
     note: "The house whiskey pour, built at the bar the way regulars ask for it",
     image: "/images/bar.jpg",
     alt: "Bartender working the candlelit bar at Alte Bistro",
+    cutout: "/images/cut/old-fashioned.webp",
+    labels: [
+      { text: "The house whiskey pour", x: 50, y: 58 },
+      { text: "Over one big cube", x: 58, y: 22 },
+      { text: "Built at the bar", x: 30, y: 90 },
+    ],
   },
 ];
 
@@ -77,16 +99,19 @@ export const morePlates = [
   {
     name: "Smash burger",
     image: "/images/smash-burger.jpg",
+    cutout: "/images/cut/smash-burger.webp",
     alt: "Double smash burger with melted cheese and fries on a steel tray",
   },
   {
     name: "Plantain and pork belly",
     image: "/images/plantain-pork-belly.jpg",
+    cutout: "/images/cut/plantain-pork-belly.webp",
     alt: "Fried plantain and crisp pork belly with chilli in a dark bowl",
   },
   {
     name: "The red coupe",
     image: "/images/red-coupe.jpg",
+    cutout: "/images/cut/red-coupe.webp",
     alt: "Deep red cocktail in a coupe glass on the brass bar",
   },
 ] as const;

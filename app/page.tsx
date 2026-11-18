@@ -1,3 +1,4 @@
+import { EmberRibbon } from "@/components/ember-ribbon";
 import { Hero } from "@/components/hero";
 import { MenuSection } from "@/components/menu-section";
 import { MobileBookBar } from "@/components/mobile-book-bar";
@@ -37,6 +38,7 @@ export default function Home() {
         <Hero />
         <TaglineReveal />
         <MenuSection />
+        <EmberRibbon />
         <NightChapters />
         <StoryBento />
         <ReviewsBento />
