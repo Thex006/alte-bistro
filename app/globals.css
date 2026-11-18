@@ -1,0 +1,259 @@
+@import "tailwindcss";
+
+/* Alte Bistro tokens. Charcoal, burnt orange, bone white. Flat grounds only. */
+@theme {
+  --color-char: #131209;
+  --color-coal: #181818;
+  --color-smoke: #1f1f1f;
+  --color-ash: #272727;
+  --color-line: #313131;
+
+  --color-bone: #efe8dc;
+  --color-bone-2: #bdb5a7;
+  --color-bone-3: #8f8879;
+
+  --color-ember: #e8622a;
+  --color-ember-hi: #f47b3f;
+  --color-ember-lo: #a9461b;
+  /* Text on an ember ground: always charcoal, in both themes. */
+  --color-ink: #131209;
+
+  --font-display: var(--font-bodoni), "Bodoni 72", "Didot", serif;
+  --font-sans: var(--font-geist), ui-sans-serif, system-ui, sans-serif;
+
+  --ease-out-expo: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* Named text styles (landing-page-design B1). Display styles use the serif. */
+@utility display-1 {
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: var(--text-4xl);
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+  @media (width >= 26rem) {
+    font-size: var(--text-5xl);
+    line-height: 1;
+  }
+  @media (width >= 48rem) {
+    font-size: var(--text-7xl);
+  }
+  @media (width >= 80rem) {
+    font-size: var(--text-8xl);
+  }
+}
+@utility heading-1 {
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: var(--text-4xl);
+  line-height: var(--text-4xl--line-height);
+  letter-spacing: -0.015em;
+  @media (width >= 48rem) {
+    font-size: var(--text-6xl);
+    line-height: 1;
+  }
+}
+@utility heading-2 {
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: var(--text-4xl);
+  line-height: var(--text-4xl--line-height);
+  letter-spacing: -0.015em;
+  @media (width >= 48rem) {
+    font-size: var(--text-5xl);
+    line-height: 1;
+  }
+}
+@utility heading-4 {
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: var(--text-2xl);
+  line-height: var(--text-2xl--line-height);
+  @media (width >= 48rem) {
+    font-size: var(--text-3xl);
+    line-height: var(--text-3xl--line-height);
+  }
+}
+@utility title-1 {
+  font-size: var(--text-xl);
+  line-height: var(--text-xl--line-height);
+  font-weight: 500;
+}
+@utility title-3 {
+  font-size: var(--text-base);
+  line-height: var(--text-base--line-height);
+  font-weight: 500;
+}
+@utility title-4 {
+  font-size: var(--text-sm);
+  line-height: var(--text-sm--line-height);
+  font-weight: 500;
+}
+@utility body-2 {
+  font-size: var(--text-base);
+  line-height: var(--text-base--line-height);
+  font-weight: 500;
+}
+@utility body-3 {
+  font-size: var(--text-base);
+  line-height: var(--text-base--line-height);
+  font-weight: 400;
+}
+@utility body-lead {
+  font-size: var(--text-lg);
+  line-height: var(--text-lg--line-height);
+  font-weight: 400;
+}
+@utility body-6 {
+  font-size: var(--text-sm);
+  line-height: var(--text-sm--line-height);
+  font-weight: 400;
+}
+@utility button-md {
+  font-size: var(--text-base);
+  line-height: var(--text-base--line-height);
+  font-weight: 600;
+}
+@utility button-sm {
+  font-size: var(--text-sm);
+  line-height: var(--text-sm--line-height);
+  font-weight: 600;
+}
+@utility caption-4 {
+  font-size: var(--text-xs);
+  line-height: var(--text-xs--line-height);
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+@utility caption-2 {
+  font-size: var(--text-sm);
+  line-height: var(--text-sm--line-height);
+  font-weight: 400;
+}
+
+/* Hero slow push in: transform only, so it runs on the compositor at full frame rate. */
+@keyframes hero-drift {
+  from {
+    transform: scale(1) translate3d(0, 0, 0);
+  }
+  to {
+    transform: scale(1.08) translate3d(-1.5%, -1%, 0);
+  }
+}
+.hero-drift {
+  position: relative;
+  animation: hero-drift 24s cubic-bezier(0.45, 0, 0.55, 1) infinite alternate;
+  will-change: transform;
+}
+
+/* Marquee: outlined serif letters, diamonds in burnt orange. */
+.badge-spin {
+  animation: badge-spin 16s linear infinite;
+}
+@keyframes badge-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.marquee-outline {
+  color: transparent;
+  -webkit-text-stroke: 1px color-mix(in srgb, var(--color-bone) 45%, transparent);
+}
+.marquee-outline [aria-hidden] {
+  background: var(--color-ember);
+}
+
+/*
+ * Light mode: warm paper grounds, charcoal type, a deeper ember for contrast.
+ * The tokens flip, so every component follows without its own light styles.
+ * `.theme-dark` pins a block to the night palette (the hero over its photo).
+ */
+:root[data-theme="light"] {
+  color-scheme: light;
+  --color-char: #f5f0e7;
+  --color-coal: #efe8dc;
+  --color-smoke: #e6ddcd;
+  --color-ash: #ddd2bf;
+  --color-line: #cfc3ad;
+  --color-bone: #131209;
+  --color-bone-2: #3f3a30;
+  --color-bone-3: #6c6455;
+  --color-ember: #d4561d;
+  --color-ember-hi: #e8622a;
+  --color-ember-lo: #a9461b;
+}
+:root[data-theme="light"] .theme-dark {
+  color-scheme: dark;
+  --color-char: #131209;
+  --color-coal: #181818;
+  --color-smoke: #1f1f1f;
+  --color-ash: #272727;
+  --color-line: #313131;
+  --color-bone: #efe8dc;
+  --color-bone-2: #bdb5a7;
+  --color-bone-3: #8f8879;
+  --color-ember: #e8622a;
+  --color-ember-hi: #f47b3f;
+}
+/* The monogram and wordmark files are bone white; darken them on paper. */
+:root[data-theme="light"] .theme-logo {
+  filter: brightness(0.1);
+}
+:root[data-theme="light"] .theme-dark .theme-logo {
+  filter: none;
+}
+html {
+  transition: background-color 0.4s var(--ease-out-expo);
+}
+
+@layer base {
+  html {
+    background: var(--color-char);
+    color-scheme: dark;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    scrollbar-color: var(--color-line) var(--color-char);
+  }
+  html.lenis,
+  html.lenis body {
+    height: auto;
+  }
+  .lenis.lenis-smooth {
+    scroll-behavior: auto !important;
+  }
+  body {
+    background: var(--color-char);
+    color: var(--color-bone);
+    font-family: var(--font-sans);
+    caret-color: var(--color-ember);
+    overflow-x: clip;
+  }
+  h1,
+  h2,
+  h3 {
+    text-wrap: balance;
+  }
+  p {
+    text-wrap: pretty;
+  }
+  ::selection {
+    background: var(--color-ember);
+    color: var(--color-char);
+  }
+  :focus-visible {
+    outline: 2px solid var(--color-ember);
+    outline-offset: 3px;
+    border-radius: 4px;
+  }
+  a {
+    text-underline-offset: 0.25em;
+  }
+  .tabular {
+    font-variant-numeric: tabular-nums lining-nums;
+  }
+}
+
+/* Motion stays on even when Windows "Animation effects" is off: the client asked for it.
+   Large travel (parallax, pinned scroll) is still short and eased, never flashing. */
